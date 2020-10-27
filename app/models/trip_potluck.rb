@@ -1,4 +1,4 @@
-class PotluckTrip < ApplicationRecord
+class TripPotluck < ApplicationRecord
   belongs_to :potluck
   belongs_to :trip
 end

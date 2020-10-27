@@ -3,7 +3,7 @@ class CreatePotlucks < ActiveRecord::Migration[6.0]
     create_table :potlucks do |t|
       t.string :name
       t.string :location
-      t.datetime :date
+      t.date :date
 
       t.timestamps
     end

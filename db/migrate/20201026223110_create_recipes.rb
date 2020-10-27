@@ -7,6 +7,7 @@ class CreateRecipes < ActiveRecord::Migration[6.0]
       t.integer :time
       t.float :price
       t.string :directions
+      t.float :cost
 
       t.timestamps
     end

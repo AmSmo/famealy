@@ -3,8 +3,8 @@ class CreateTrips < ActiveRecord::Migration[6.0]
     create_table :trips do |t|
       t.string :name
       t.string :location
-      t.datetime :start_date
-      t.datetime :end_date
+      t.date :start_date
+      t.date :end_date
       t.float :cost
 
       t.timestamps

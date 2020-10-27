@@ -15,14 +15,6 @@ ActiveRecord::Schema.define(version: 2020_10_26_224223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "friends", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.integer "friend"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_friends_on_user_id"
-  end
-
   create_table "ingredients", force: :cascade do |t|
     t.string "name"
     t.integer "spoon_id"
@@ -30,19 +22,20 @@ ActiveRecord::Schema.define(version: 2020_10_26_224223) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "potluck_trips", force: :cascade do |t|
+  create_table "potluck_recipes", force: :cascade do |t|
+    t.bigint "recipe_id", null: false
     t.bigint "potluck_id", null: false
-    t.bigint "trip_id", null: false
+    t.time "time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["potluck_id"], name: "index_potluck_trips_on_potluck_id"
-    t.index ["trip_id"], name: "index_potluck_trips_on_trip_id"
+    t.index ["potluck_id"], name: "index_potluck_recipes_on_potluck_id"
+    t.index ["recipe_id"], name: "index_potluck_recipes_on_recipe_id"
   end
 
   create_table "potlucks", force: :cascade do |t|
     t.string "name"
     t.string "location"
-    t.datetime "date"
+    t.date "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -65,20 +58,9 @@ ActiveRecord::Schema.define(version: 2020_10_26_224223) do
     t.integer "time"
     t.float "price"
     t.string "directions"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "recipes_potlucks", force: :cascade do |t|
-    t.bigint "recipes_id", null: false
-    t.bigint "potluck_id", null: false
-    t.integer "time"
-    t.datetime "day"
     t.float "cost"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["potluck_id"], name: "index_recipes_potlucks_on_potluck_id"
-    t.index ["recipes_id"], name: "index_recipes_potlucks_on_recipes_id"
   end
 
   create_table "supplied_ingredients", force: :cascade do |t|
@@ -92,11 +74,20 @@ ActiveRecord::Schema.define(version: 2020_10_26_224223) do
     t.index ["potluck_id"], name: "index_supplied_ingredients_on_potluck_id"
   end
 
+  create_table "trip_potlucks", force: :cascade do |t|
+    t.bigint "potluck_id", null: false
+    t.bigint "trip_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["potluck_id"], name: "index_trip_potlucks_on_potluck_id"
+    t.index ["trip_id"], name: "index_trip_potlucks_on_trip_id"
+  end
+
   create_table "trips", force: :cascade do |t|
     t.string "name"
     t.string "location"
-    t.datetime "start_date"
-    t.datetime "end_date"
+    t.date "start_date"
+    t.date "end_date"
     t.float "cost"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -133,6 +124,14 @@ ActiveRecord::Schema.define(version: 2020_10_26_224223) do
     t.index ["user_id"], name: "index_user_recipes_on_user_id"
   end
 
+  create_table "user_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "friend"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_users_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "username"
@@ -143,19 +142,19 @@ ActiveRecord::Schema.define(version: 2020_10_26_224223) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "friends", "users"
-  add_foreign_key "potluck_trips", "potlucks"
-  add_foreign_key "potluck_trips", "trips"
+  add_foreign_key "potluck_recipes", "potlucks"
+  add_foreign_key "potluck_recipes", "recipes"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
-  add_foreign_key "recipes_potlucks", "potlucks"
-  add_foreign_key "recipes_potlucks", "recipes", column: "recipes_id"
   add_foreign_key "supplied_ingredients", "ingredients"
   add_foreign_key "supplied_ingredients", "potlucks"
+  add_foreign_key "trip_potlucks", "potlucks"
+  add_foreign_key "trip_potlucks", "trips"
   add_foreign_key "user_ingredients", "ingredients"
   add_foreign_key "user_ingredients", "users"
   add_foreign_key "user_potlucks", "potlucks"
   add_foreign_key "user_potlucks", "users"
   add_foreign_key "user_recipes", "recipes"
   add_foreign_key "user_recipes", "users"
+  add_foreign_key "user_users", "users"
 end
