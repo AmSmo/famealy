@@ -12,5 +12,5 @@
 #  updated_at      :datetime         not null
 #
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :username, :location, :password_digest, :email_address
+  attributes :id, :name, :username, :location, :email_address
 end

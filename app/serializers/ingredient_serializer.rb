@@ -9,5 +9,5 @@
 #  updated_at :datetime         not null
 #
 class IngredientSerializer < ActiveModel::Serializer
-  attributes :id, :name, :spoon_id
+  attributes :name, :spoon_id
 end
