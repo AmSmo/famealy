@@ -26,6 +26,32 @@ class UsersController < ApplicationController
       end
     end
 
+    def add_recipe
+      
+      current_recipe = Recipe.find_by(spoon_id: params[:spoon_id])
+      UserRecipe.create(user: current_user, recipe: current_recipe)
+      user_details = pertinent
+      render json: user_details, status: :accepted
+    end
+
+    def delete_recipe
+      
+      current_recipe = UserRecipe.find_by(recipe_id: params[:id], user: current_user)
+      current_recipe.destroy
+      user_details = pertinent
+      render json: user_details, status: :accepted
+    end
+    def pertinent
+      recipes = current_user.recipes
+      potlucks = current_user.potlucks
+      ingredients = current_user.ingredients
+      return {recipes: ActiveModelSerializers::SerializableResource.new(recipes), potlucks: potlucks, ingredients: ingredients}
+    end
+    def user_info
+      user_details = pertinent
+      render json: user_details, status: :accepted
+    end
+
     private
 
     def user_params
