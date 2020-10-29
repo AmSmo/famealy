@@ -14,11 +14,6 @@
 #  updated_at  :datetime         not null
 #
 class RecipeSerializer < ActiveModel::Serializer
-  attributes :id, :name, :spoon_id, :description, :time, :cost, :directions, :directions_json
-
+  attributes :id, :name, :spoon_id, :description, :time, :cost, :image_url, :directions, :directions_json
   has_many :recipe_ingredients
-  # def recipe_ingredients
-  #   RecipeIngredientsSerializer.new(self.object.recipe_ingredients)
-
-  # end
 end

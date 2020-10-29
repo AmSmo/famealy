@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_28_223752) do
+ActiveRecord::Schema.define(version: 2020_10_29_124934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,12 +57,12 @@ ActiveRecord::Schema.define(version: 2020_10_28_223752) do
     t.integer "spoon_id"
     t.string "description"
     t.integer "time"
-    t.float "price"
     t.string "directions"
     t.float "cost"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.json "directions_json"
+    t.string "image_url"
   end
 
   create_table "supplied_ingredients", force: :cascade do |t|
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 2020_10_28_223752) do
   create_table "user_ingredients", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "ingredient_id", null: false
-    t.integer "amount"
+    t.float "amount"
     t.string "amount_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

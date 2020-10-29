@@ -11,4 +11,6 @@
 #
 class PotluckSerializer < ActiveModel::Serializer
   attributes :id, :name, :location, :date
+  has_many :recipes
+  has_many :users
 end
