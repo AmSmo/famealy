@@ -3,12 +3,12 @@ class UsersController < ApplicationController
 
     def create
         @user = User.create(user_params)
-        
+        byebug
         if @user.valid?
             token = encode_token({user_id: @user.id})
             render json: { user: @user, jwt: token}, status: :accepted
         else
-            render json: { error: 'failed to create user' }, status: :not_acceptable
+            render json: { message: 'failed to create user' }, status: :not_acceptable
         end
     end
  
@@ -29,6 +29,6 @@ class UsersController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:username, :password, :location, :email, :name)
+        params.require(:user).permit(:username, :password, :location, :email_address, :name)
     end
 end
