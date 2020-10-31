@@ -1,4 +1,5 @@
 class RecipesController < ApplicationController
+    allowed_types = ["oz", "cup", "g", "tbsp", "tsp", "lb", "kg"]
     def index
         @recipes = Recipe.all
         render json: @recipes
@@ -15,7 +16,7 @@ class RecipesController < ApplicationController
             render json: recipe
         else
             recipe = Api.recipe_detail(params[:spoon_id])
-            
+            allowed_types = ["oz", "cup", "g", "tbsp", "tsp", "lb", "kg", "large", "medium", "small", "slice", "can", "clove"]
             current_recipe = Recipe.create(spoon_id:recipe[:spoon_id], 
                         image_url: recipe[:image_url],
                         name: recipe[:name],
@@ -26,14 +27,26 @@ class RecipesController < ApplicationController
                         directions: recipe[:directions],
                         )
             recipe[:ingredients].each do |ingredient|
-                current_ingredient = Ingredient.find_or_create_by(spoon_id: ingredient["id"], name: ingredient["name"])
                 
-                RecipeIngredient.create(recipe: current_recipe, ingredient: current_ingredient, amount: ingredient["measures"]["us"]["amount"], amount_type: ingredient["measures"]["us"]["unitShort"], description: ingredient["original"] )
+                results = Api.ingredient_search(ingredient["name"])
+                image_url = "https://spoonacular.com/cdn/ingredients_100x100/#{results[0]["image"]}"
+                units = []
+                if results[0]["possibleUnits"]
+                    results[0]["possibleUnits"].map do |ing| 
+                        units << "tbsp" if ing == "tablespoon"
+                        units << "tsp" if ing == "teaspoon"
+                        units << ing if allowed_types.include?(ing)
+                    end
+                end
+                spoon_amount = Recipe.translate_amount(ingredient["measures"]["us"]["unitShort"])
+                
+                current_ingredient = Ingredient.create(name: ingredient["name"], spoon_id: ingredient["id"], image_url: image_url, possible_units: units)
+                RecipeIngredient.create(recipe: current_recipe, ingredient: current_ingredient, amount: ingredient["measures"]["us"]["amount"], amount_type: spoon_amount, description: ingredient["original"] )
             end
 
            render json: current_recipe, status: :accepted
         end
         
-
+        
     end
 end

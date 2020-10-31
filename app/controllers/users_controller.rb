@@ -56,7 +56,7 @@ class UsersController < ApplicationController
       type = params[:type]
 
       if type == "name"
-        results = User.where('lower(name) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
+        results = User('lower(name) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
       elsif type == "email"
         results = User.where('lower(email_address) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
       elsif type == "username"
@@ -71,7 +71,25 @@ class UsersController < ApplicationController
       ingredients = current_user.ingredients
       return {recipes: ActiveModelSerializers::SerializableResource.new(recipes), potlucks: potlucks, ingredients: ingredients}
     end
-    
+    def add_pantry
+      ingredient = Ingredient.find_by(spoon_id: pantry_id[:ingredient_id].to_i)
+      current_user_ingredient = UserIngredient.find_by(user: current_user, ingredient: ingredient)
+      if current_user_ingredient
+        byebug
+        if params["pantry"]["amount_type"] == current_user_ingredient.amount_type
+          byebug
+          new_amount = params["pantry"]["amount"].to_f + current_user_ingredient.amount
+          current_user_ingredient.update(amount: new_amount)
+        end
+      else
+        current_user_ingredient = UserIngredient.create(user_id: current_user.id, ingredient: ingredient)
+        current_user_ingredient.update(pantry_params)
+      end
+
+      user_ingredients = current_user.user_ingredients
+      render json: user_ingredients
+    end
+
     def user_info
       user_details = pertinent
       render json: user_details, status: :accepted
@@ -81,5 +99,12 @@ class UsersController < ApplicationController
 
     def user_params
         params.require(:user).permit(:username, :password, :location, :email_address, :name)
+    end
+
+    def pantry_id
+      params.require(:other_info).permit(:ingredient_id)
+    end
+    def pantry_params
+      params.require(:pantry).permit(:amount_type, :amount)
     end
 end

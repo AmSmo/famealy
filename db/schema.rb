@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_29_124934) do
+ActiveRecord::Schema.define(version: 2020_10_31_235619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2020_10_29_124934) do
     t.integer "spoon_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "possible_units", default: [], array: true
+    t.string "image_url"
   end
 
   create_table "potluck_recipes", force: :cascade do |t|
@@ -68,10 +70,11 @@ ActiveRecord::Schema.define(version: 2020_10_29_124934) do
   create_table "supplied_ingredients", force: :cascade do |t|
     t.bigint "ingredient_id", null: false
     t.bigint "potluck_id", null: false
-    t.integer "quantity"
+    t.integer "amount"
     t.integer "user_ingredient"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "amount_type"
     t.index ["ingredient_id"], name: "index_supplied_ingredients_on_ingredient_id"
     t.index ["potluck_id"], name: "index_supplied_ingredients_on_potluck_id"
   end

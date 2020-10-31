@@ -20,5 +20,20 @@ class Recipe < ApplicationRecord
     has_many :ingredients, through: :recipe_ingredients
     has_many :potluck_recipes, dependent: :destroy
     has_many :potlucks, through: :potluck_recipes
+
+    def self.translate_amount(amount)
+            case amount.downcase()
+            when "tsps"
+                return "tsp"
+            when "tbsps"
+                return "tbsp"
+            when "cloves"
+                return "clove"
+            when "cups"
+                return "cup"
+            else
+                return amount
+            end
+        end
     
 end
