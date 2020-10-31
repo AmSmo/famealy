@@ -1,14 +1,11 @@
 class RecipesController < ApplicationController
     def index
         @recipes = Recipe.all
-        
         render json: @recipes
     end
     
-    def search
-        
+    def search        
         recipes = Api.recipe_search(params[:keyword])
-        
         render json: recipes, status: :accepted
     end
 
