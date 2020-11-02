@@ -2,6 +2,7 @@ class UsersController < ApplicationController
      skip_before_action :authorized, only: [:create, :login, :auth]
 
     def create
+      
         @user = User.create(user_params)
         if @user.valid?
             token = encode_token({user_id: @user.id})
@@ -11,6 +12,25 @@ class UsersController < ApplicationController
         end
     end
  
+    def friends
+      friends = current_user.friends
+      render json: friends
+    end
+
+    def add_friend
+      friend = User.find_by(id: params[:friendId])
+      already = current_user.friends.include?(friend)
+      
+      if !already
+        
+        UserUser.create(user: current_user, friend: friend)
+        UserUser.create(friend: current_user, user: friend)
+      end
+      byebug
+      friends = current_user.friends
+      render json: friends
+    end
+
     def auth
       if current_user == nil
         render json:{user: {
@@ -25,9 +45,9 @@ class UsersController < ApplicationController
     end
 
     def login
-      @user= User.find_by(username: user_params[:username])
+      @user= User.find_by(username: login_params[:username])
 
-      if @user && @user.authenticate(user_params[:password])        
+      if @user && @user.authenticate(login_params[:password])        
         token = encode_token({user_id: @user.id})
         render json: { user: UserSerializer.new(@user), jwt: token}, status: :accepted        
       else
@@ -56,7 +76,7 @@ class UsersController < ApplicationController
       type = params[:type]
 
       if type == "name"
-        results = User('lower(name) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
+        results = User.where('lower(name) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
       elsif type == "email"
         results = User.where('lower(email_address) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
       elsif type == "username"
@@ -75,9 +95,9 @@ class UsersController < ApplicationController
       ingredient = Ingredient.find_by(spoon_id: pantry_id[:ingredient_id].to_i)
       current_user_ingredient = UserIngredient.find_by(user: current_user, ingredient: ingredient)
       if current_user_ingredient
-        byebug
+        
         if params["pantry"]["amount_type"] == current_user_ingredient.amount_type
-          byebug
+          
           new_amount = params["pantry"]["amount"].to_f + current_user_ingredient.amount
           current_user_ingredient.update(amount: new_amount)
         end
@@ -97,8 +117,13 @@ class UsersController < ApplicationController
 
     private
 
+    def login_params
+      params.require(:user).permit(:username, :password)
+
+    end
+
     def user_params
-        params.require(:user).permit(:username, :password, :location, :email_address, :name)
+      params.permit(:username, :password, :location, :email_address, :name, :profile_pic)
     end
 
     def pantry_id

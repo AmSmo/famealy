@@ -4,4 +4,5 @@ class RecipeIngredientSerializer < ActiveModel::Serializer
   def ingredient
     ActiveModelSerializers::SerializableResource.new(self.object.ingredient)
   end
+  
 end

@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   post '/user_search', to: "users#search"
   get '/auth', to: 'users#auth'
   get '/my_info', to: 'users#user_info'
-  
+  get '/users/friends', to: 'users#friends'
+  post '/users/add_friend', to: 'users#add_friend'
   post '/login', to: 'users#login'
   post '/users/add_recipe', to: 'users#add_recipe'
   delete '/user_recipes/:id', to: 'users#delete_recipe'
@@ -15,6 +16,8 @@ Rails.application.routes.draw do
   resources :potlucks
   resources :ingredients
   resources :recipes
-  resources :users
+  resources :users do
+    get :profile_pic, on: :member
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

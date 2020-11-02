@@ -11,9 +11,13 @@
 #
 class PotluckSerializer < ActiveModel::Serializer
   attributes :id, :name, :location, :date, :ingredients, :supplied_ingredients
-  has_many :recipes
+  has_many :potluck_recipes
   has_many :users
 
+  def recipes
+    self.object.recipes
+  end
+ 
   # def ingredients
   #   self.object.recipe_ingredients.map do |recipe_ingredient|
 
