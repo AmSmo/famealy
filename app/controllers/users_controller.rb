@@ -11,6 +11,11 @@ class UsersController < ApplicationController
             render json: { message: 'failed to create user' }, status: :not_acceptable
         end
     end
+
+    def show
+      @user = User.find_by(id: params[:id])
+      render json: @user
+    end
  
     def friends
       friends = current_user.friends
@@ -26,7 +31,7 @@ class UsersController < ApplicationController
         UserUser.create(user: current_user, friend: friend)
         UserUser.create(friend: current_user, user: friend)
       end
-      byebug
+      
       friends = current_user.friends
       render json: friends
     end

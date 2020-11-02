@@ -49,4 +49,10 @@ class RecipesController < ApplicationController
         
         
     end
+
+        def random
+            recipe = Api.random
+            
+            render json: recipe
+        end
 end

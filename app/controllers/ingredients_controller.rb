@@ -9,7 +9,7 @@ class IngredientsController < ApplicationController
         if current_ingredient
             render json: current_ingredient, status: :accepted
             else
-                byebug
+                
                 allowed_types = ["oz", "cup", "g", "tbsp", "tsp", "lb", "kg", "large", "medium", "small", "can", "clove"]
                 units = []
                 results[0]["possibleUnits"].map do |ing| 

@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   delete '/user_recipes/:id', to: 'users#delete_recipe'
   get '/users/ingredients', to: 'ingredients#my_ingredients'
   post '/users/add_pantry', to: 'users#add_pantry'
+  get '/recipes/random', to: 'recipes#random'
+
   resources :trips
   resources :potlucks
   resources :ingredients

@@ -21,6 +21,7 @@ class RecipeSerializer < ActiveModel::Serializer
       {user_name: user_recipe.user.username, user_id: user_recipe.user.id, rating: user_recipe.rating}
     end
   end
+  
   def reviews
     self.object.user_recipes.map do |user_recipe|
       {user_name: user_recipe.user.username, user_id: user_recipe.user.id, review: user_recipe.review}

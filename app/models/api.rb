@@ -13,6 +13,16 @@ class Api < ApplicationRecord
         JSON.parse(response.read_body)
     end
 
+    def self.random
+        url = URI("https://rapidapi.p.rapidapi.com/recipes/random?number=1")
+        recipe = Api.api_call(url)["recipes"][0]
+        manipulated_recipe = {
+            name: recipe["title"],
+            spoon_id: recipe["id"].to_i,
+            image_url: recipe["image"]
+        }
+    end
+
     def self.api_ingredient_info(ingredient)
         url = URI("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/parseIngredients") 
         http = Net::HTTP.new(url.host, url.port)
