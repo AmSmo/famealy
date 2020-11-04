@@ -36,10 +36,10 @@ class PotlucksController < ApplicationController
     end
 
     def bring_ingredient
-        byebug
+        
         current_ingredient = Ingredient.find_by(spoon_id:(ingredient_params[:spoon_id]))
         current_supply = SuppliedIngredient.find_or_create_by(ingredient: current_ingredient, user: current_user, potluck_id: ingredient_params[:potId], amount: ingredient_params[:amount], amount_type: ingredient_params[:amount_type] )
-        
+
         render json: current_supply
     end
     private

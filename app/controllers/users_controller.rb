@@ -18,8 +18,18 @@ class UsersController < ApplicationController
     end
  
     def friends
-      friends = current_user.friends
-      render json: friends
+      
+      current_friends = current_user.user_users.map do |user_user|
+        hashed_uu = user_user.friend.serializable_hash
+        hashed_uu.delete("created_at")
+        hashed_uu.delete("updated_at")
+        hashed_uu.delete("password_digest")
+        hashed_uu[:friendship] = user_user.id
+        
+        hashed_uu
+    end
+    
+      render json: current_friends
     end
 
 
@@ -88,6 +98,8 @@ class UsersController < ApplicationController
       elsif type == "username"
         results =User.where('lower(username) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
       end
+      
+      results = results.reject{|friend| current_user.friends.include?(friend)}
       render json: results
     end
     def pertinent
@@ -123,6 +135,14 @@ class UsersController < ApplicationController
       render json: current_potluck.users
     end
 
+    def unfriend
+      
+      current_friendship = UserUser.find_by(id: unfriend_params[:friend_id])
+      current_friendship.destroy
+
+      friends
+    end
+
     def leave_potluck
       current_potluck = Potluck.find_by(id: params[:potluck_id])
       current_user_potluck = UserPotluck.find_by(user: current_user, potluck: current_potluck )
@@ -132,7 +152,7 @@ class UsersController < ApplicationController
       current_user_potluck.destroy
       if (current_potluck.users.length == 0)
         current_potluck.destroy
-        byebug
+        
         render json: {message: "The end"}
       end 
       render json: current_potluck.users
@@ -147,6 +167,10 @@ class UsersController < ApplicationController
     end
 
     private
+
+    def unfriend_params
+      params.require(:user).permit(:friend_id)
+    end
 
     def login_params
       params.require(:user).permit(:username, :password)

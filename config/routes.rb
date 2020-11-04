@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   post '/users/leave_potluck', to: 'users#leave_potluck'
   post '/potlucks/bring_food', to: 'potlucks#bring_food'
   post '/potlucks/bring_ingredient', to: 'potlucks#bring_ingredient'
+  post '/users/unfriend', to: 'users#unfriend'
   resources :trips
   resources :potlucks
   resources :ingredients
