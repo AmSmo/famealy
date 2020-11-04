@@ -25,6 +25,7 @@ class Potluck < ApplicationRecord
             hashed_ri.delete("created_at")
             hashed_ri.delete("updated_at")
             hashed_ri.delete("updated_at")
+            hashed_ri[:possible_units] = recipe_ingredient.ingredient.possible_units
             hashed_ri[:ingredient_name] = recipe_ingredient.ingredient.name
             hashed_ri[:ingredient_id] = recipe_ingredient.ingredient.spoon_id
             hashed_ri

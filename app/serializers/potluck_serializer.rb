@@ -10,10 +10,10 @@
 #  updated_at :datetime         not null
 #
 class PotluckSerializer < ActiveModel::Serializer
-  attributes :id, :name, :location, :date, :ingredients, :supplied_ingredients
+  attributes :id, :name, :location, :date, :ingredients
   has_many :potluck_recipes
   has_many :users
-
+  has_many :supplied_ingredients
   def recipes
     self.object.recipes
   end

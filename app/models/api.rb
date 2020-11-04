@@ -13,6 +13,12 @@ class Api < ApplicationRecord
         JSON.parse(response.read_body)
     end
 
+    def self.convert(details)
+        url = URI("https://rapidapi.p.rapidapi.com/recipes/convert?ingredientName=#{details[:ingredient]}&targetUnit=#{details[:toType]}&sourceUnit=#{details[:fromType]}&sourceAmount=#{details[:amount]}")
+        Api.api_call(url)
+    end
+
+
     def self.random
         url = URI("https://rapidapi.p.rapidapi.com/recipes/random?number=1")
         recipe = Api.api_call(url)["recipes"][0]

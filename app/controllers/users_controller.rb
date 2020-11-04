@@ -22,6 +22,7 @@ class UsersController < ApplicationController
       render json: friends
     end
 
+
     def add_friend
       friend = User.find_by(id: params[:friendId])
       already = current_user.friends.include?(friend)
@@ -96,6 +97,7 @@ class UsersController < ApplicationController
       ingredients = current_user.ingredients
       return {recipes: ActiveModelSerializers::SerializableResource.new(recipes), potlucks: potlucks, ingredients: ingredients}
     end
+
     def add_pantry
       ingredient = Ingredient.find_by(spoon_id: pantry_id[:ingredient_id].to_i)
       current_user_ingredient = UserIngredient.find_by(user: current_user, ingredient: ingredient)
@@ -113,6 +115,30 @@ class UsersController < ApplicationController
 
       user_ingredients = current_user.user_ingredients
       render json: user_ingredients
+    end
+
+    def join_potluck
+      current_potluck = Potluck.find_by(id: params[:potluck_id])
+      UserPotluck.create(user: current_user, potluck: current_potluck)
+      render json: current_potluck.users
+    end
+
+    def leave_potluck
+      current_potluck = Potluck.find_by(id: params[:potluck_id])
+      current_user_potluck = UserPotluck.find_by(user: current_user, potluck: current_potluck )
+      
+      current_potluck.potluck_recipes.select{|pr| pr.user === current_user}.map(&:destroy)
+      # current_potluck.supplied_ingredients.map{|sup| sup.user_ingredient.user.id}.select{|pr| pr.user === current_user}.map(&:destroy)
+      current_user_potluck.destroy
+      if (current_potluck.users.length == 0)
+        current_potluck.destroy
+        byebug
+        render json: {message: "The end"}
+      end 
+      render json: current_potluck.users
+    end
+    def edit_pantry
+      ingredient = UserIngredient.find_by(params[:id])
     end
 
     def user_info

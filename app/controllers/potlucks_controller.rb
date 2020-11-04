@@ -16,6 +16,14 @@ class PotlucksController < ApplicationController
         render json: {my_potlucks: my_potlucks, friends_potlucks:fixed}
     end
 
+    def bring_food
+        recipe = Recipe.find_by(spoon_id: bringing_params[:recipe])
+        current_potluck = Potluck.find_by(id: bringing_params[:potluck_id])
+        success = PotluckRecipe.create(recipe: recipe, user: current_user, potluck: current_potluck )
+        
+        render json: current_potluck
+    end
+
     def create
         current_potluck = Potluck.create(potluck_params)
         UserPotluck.create(potluck: current_potluck, user: current_user)
@@ -27,7 +35,21 @@ class PotlucksController < ApplicationController
         render json: current_potluck
     end
 
+    def bring_ingredient
+        byebug
+        current_ingredient = Ingredient.find_by(spoon_id:(ingredient_params[:spoon_id]))
+        current_supply = SuppliedIngredient.find_or_create_by(ingredient: current_ingredient, user: current_user, potluck_id: ingredient_params[:potId], amount: ingredient_params[:amount], amount_type: ingredient_params[:amount_type] )
+        
+        render json: current_supply
+    end
     private
+
+    def ingredient_params
+        params.require(:ingredients).permit(:amount, :spoon_id, :amount_type, :potId)
+    end
+    def bringing_params
+        params.require(:bringing).permit(:potluck_id, :recipe)
+    end
 
     def potluck_params
         params.require(:potluck).permit(:name, :location, :date)

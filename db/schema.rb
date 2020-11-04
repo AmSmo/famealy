@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_02_001635) do
+ActiveRecord::Schema.define(version: 2020_11_03_235416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,15 +91,16 @@ ActiveRecord::Schema.define(version: 2020_11_02_001635) do
   end
 
   create_table "supplied_ingredients", force: :cascade do |t|
-    t.bigint "ingredient_id", null: false
     t.bigint "potluck_id", null: false
     t.integer "amount"
-    t.integer "user_ingredient"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "amount_type"
+    t.bigint "ingredient_id"
+    t.bigint "user_id"
     t.index ["ingredient_id"], name: "index_supplied_ingredients_on_ingredient_id"
     t.index ["potluck_id"], name: "index_supplied_ingredients_on_potluck_id"
+    t.index ["user_id"], name: "index_supplied_ingredients_on_user_id"
   end
 
   create_table "trip_potlucks", force: :cascade do |t|
@@ -175,7 +176,6 @@ ActiveRecord::Schema.define(version: 2020_11_02_001635) do
   add_foreign_key "potluck_recipes", "recipes"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
-  add_foreign_key "supplied_ingredients", "ingredients"
   add_foreign_key "supplied_ingredients", "potlucks"
   add_foreign_key "trip_potlucks", "potlucks"
   add_foreign_key "trip_potlucks", "trips"

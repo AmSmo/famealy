@@ -28,19 +28,24 @@ class RecipesController < ApplicationController
                         )
             recipe[:ingredients].each do |ingredient|
                 
-                results = Api.ingredient_search(ingredient["name"])
-                image_url = "https://spoonacular.com/cdn/ingredients_100x100/#{results[0]["image"]}"
-                units = []
-                if results[0]["possibleUnits"]
-                    results[0]["possibleUnits"].map do |ing| 
-                        units << "tbsp" if ing == "tablespoon"
-                        units << "tsp" if ing == "teaspoon"
-                        units << ing if allowed_types.include?(ing)
-                    end
-                end
-                spoon_amount = Recipe.translate_amount(ingredient["measures"]["us"]["unitShort"])
+
                 
-                current_ingredient = Ingredient.create(name: ingredient["name"], spoon_id: ingredient["id"], image_url: image_url, possible_units: units)
+                current_ingredient = Ingredient.find_by(spoon_id: ingredient["id"])
+                if !current_ingredient
+                    results = Api.ingredient_search(ingredient["name"])
+                    image_url = "https://spoonacular.com/cdn/ingredients_100x100/#{results[0]["image"]}"
+                    units = []
+                    if results[0]["possibleUnits"]
+                        results[0]["possibleUnits"].map do |ing| 
+                            units << "tbsp" if ing == "tablespoon"
+                            units << "tsp" if ing == "teaspoon"
+                            units << ing if allowed_types.include?(ing)
+                        end
+                    end
+                    spoon_amount = Recipe.translate_amount(ingredient["measures"]["us"]["unitShort"])
+                
+                    current_ingredient = Ingredient.create(name: ingredient["name"], spoon_id: ingredient["id"], image_url: image_url, possible_units: units)
+                end
                 RecipeIngredient.create(recipe: current_recipe, ingredient: current_ingredient, amount: ingredient["measures"]["us"]["amount"], amount_type: spoon_amount, description: ingredient["original"] )
             end
 

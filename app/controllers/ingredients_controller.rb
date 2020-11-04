@@ -24,6 +24,12 @@ class IngredientsController < ApplicationController
         end
     end
 
+    def convert
+        
+        converted = Api.convert(convert_params)
+        render json: converted
+    end
+
     def my_ingredients
         
         ingredients = current_user.user_ingredients
@@ -38,5 +44,9 @@ class IngredientsController < ApplicationController
 
     def pantry_params
         params.require(:pantry).permit(:spoon_id, :amount, :amount_type)
+    end
+
+    def convert_params
+        params.require(:convert).permit(:amount, :toType, :fromType, :ingredient)
     end
 end

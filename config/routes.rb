@@ -13,7 +13,12 @@ Rails.application.routes.draw do
   get '/users/ingredients', to: 'ingredients#my_ingredients'
   post '/users/add_pantry', to: 'users#add_pantry'
   get '/recipes/random', to: 'recipes#random'
-
+  post '/ingredients/convert', to: 'ingredients#convert'
+  patch '/user_ingredient/:id', to: 'users#edit_pantry'
+  post '/users/join_potluck', to: 'users#join_potluck'
+  post '/users/leave_potluck', to: 'users#leave_potluck'
+  post '/potlucks/bring_food', to: 'potlucks#bring_food'
+  post '/potlucks/bring_ingredient', to: 'potlucks#bring_ingredient'
   resources :trips
   resources :potlucks
   resources :ingredients
