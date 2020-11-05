@@ -98,7 +98,6 @@ class UsersController < ApplicationController
       elsif type == "username"
         results =User.where('lower(username) LIKE ?', "%#{params[:query].downcase}%").where.not(id: current_user.id)
       end
-      
       results = results.reject{|friend| current_user.friends.include?(friend)}
       render json: results
     end
@@ -129,6 +128,8 @@ class UsersController < ApplicationController
       render json: user_ingredients
     end
 
+    
+
     def join_potluck
       current_potluck = Potluck.find_by(id: params[:potluck_id])
       UserPotluck.create(user: current_user, potluck: current_potluck)
@@ -157,8 +158,16 @@ class UsersController < ApplicationController
       end 
       render json: current_potluck.users
     end
+
     def edit_pantry
-      ingredient = UserIngredient.find_by(params[:id])
+      
+      ingredient = UserIngredient.find_by(id: params[:id])
+      ingredient.update!(update_params)
+      
+      
+      
+
+        render json: ingredient
     end
 
     def user_info
@@ -177,6 +186,9 @@ class UsersController < ApplicationController
 
     end
 
+    def update_params
+      params.require(:update).permit(:amount, :amount_type)
+    end
     def user_params
       params.permit(:username, :password, :location, :email_address, :name, :profile_pic)
     end
@@ -184,6 +196,7 @@ class UsersController < ApplicationController
     def pantry_id
       params.require(:other_info).permit(:ingredient_id)
     end
+
     def pantry_params
       params.require(:pantry).permit(:amount_type, :amount)
     end

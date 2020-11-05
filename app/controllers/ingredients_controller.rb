@@ -33,7 +33,11 @@ class IngredientsController < ApplicationController
     def my_ingredients
         
         ingredients = current_user.user_ingredients
-        render json: ingredients
+        potluck_ingredients = current_user.supplied_ingredients
+        my_results = ActiveModelSerializers::SerializableResource.new(ingredients)
+        potluck_results = ActiveModelSerializers::SerializableResource.new(potluck_ingredients)
+        
+        render json: {my_ingredients: my_results, my_supplied_ingredients: potluck_results}
     end
 
     def add_to_pantry

@@ -78,5 +78,6 @@ class Api < ApplicationRecord
 
     def self.ingredient_search(ingredient_keyword)
         result = Api.api_ingredient_info(ingredient_keyword)
+       
     end
 end
