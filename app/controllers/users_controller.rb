@@ -147,9 +147,10 @@ class UsersController < ApplicationController
     def leave_potluck
       current_potluck = Potluck.find_by(id: params[:potluck_id])
       current_user_potluck = UserPotluck.find_by(user: current_user, potluck: current_potluck )
-      
+        
       current_potluck.potluck_recipes.select{|pr| pr.user === current_user}.map(&:destroy)
-      # current_potluck.supplied_ingredients.map{|sup| sup.user_ingredient.user.id}.select{|pr| pr.user === current_user}.map(&:destroy)
+      current_user_ingredients = SuppliedIngredient.where(potluck: current_potluck, user: current_user)
+      current_user_ingredients.destroy_all
       current_user_potluck.destroy
       if (current_potluck.users.length == 0)
         current_potluck.destroy
