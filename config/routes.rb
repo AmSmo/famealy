@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   post '/potlucks/bring_food', to: 'potlucks#bring_food'
   post '/potlucks/bring_ingredient', to: 'potlucks#bring_ingredient'
   post '/users/unfriend', to: 'users#unfriend'
+  get '/ingredients/frequent', to: 'ingredients#stock_pantry'
   resources :trips
   resources :potlucks
   resources :ingredients

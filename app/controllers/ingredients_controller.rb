@@ -1,4 +1,5 @@
 class IngredientsController < ApplicationController
+    skip_before_action :authorized, only: [:stock_pantry]
     allowed_types = ["oz", "cup", "g", "tbsp", "tsp", "lb", "kg"]
     def find_ingredient
         results = Api.ingredient_search(params[:ingredient])
@@ -40,8 +41,12 @@ class IngredientsController < ApplicationController
         render json: {my_ingredients: my_results, my_supplied_ingredients: potluck_results}
     end
 
-    def add_to_pantry
-        
+    def stock_pantry
+        frequent_ingredients = ["salt", "pepper", "flour", "granulated sugar", "brown sugar", "paprika", 
+                "butter", "garlic", "onions", "tomato", "potato", "vegetable oil", "eggs",
+                 "spaghetti", "bread", "hot sauce", "soy sauce", "rice", "baking powder", "baking soda"]
+        ingredients = frequent_ingredients.map{|ing| Ingredient.find_by(name: ing)}
+        render json: ingredients
     end
 
     private
