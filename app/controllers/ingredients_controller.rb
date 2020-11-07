@@ -31,6 +31,28 @@ class IngredientsController < ApplicationController
         render json: converted
     end
 
+    def bulk_add
+        bulk_params[:ingredients].map do |ingredient|
+            if ingredient["add"]
+                current_ingredient = Ingredient.find_by(spoon_id: ingredient["spoon_id"])
+                UserIngredient.create(user: current_user, ingredient: current_ingredient, amount: bulk_params[:ingredients][0]["amount"].to_f, amount_type: bulk_params[:ingredients][0]["amount_type"])
+            end
+        end
+        ingredients = current_user.user_ingredients
+        potluck_ingredients = current_user.supplied_ingredients
+        my_results = ActiveModelSerializers::SerializableResource.new(ingredients)
+        potluck_results = ActiveModelSerializers::SerializableResource.new(potluck_ingredients)
+        
+        render json: {my_ingredients: my_results, my_supplied_ingredients: potluck_results}
+
+    end
+
+    def destroy
+        to_eat = UserIngredient.find_by(id: params[:id])
+        to_eat.destroy
+        redirect_to action: 'my_ingredients'
+    end
+
     def my_ingredients
         
         ingredients = current_user.user_ingredients
@@ -57,5 +79,9 @@ class IngredientsController < ApplicationController
 
     def convert_params
         params.require(:convert).permit(:amount, :toType, :fromType, :ingredient)
+    end
+
+    def bulk_params
+        params.require(:bulk).permit!
     end
 end

@@ -12,16 +12,18 @@ Rails.application.routes.draw do
   delete '/user_recipes/:id', to: 'users#delete_recipe'
   get '/users/ingredients', to: 'ingredients#my_ingredients'
   post '/users/add_pantry', to: 'users#add_pantry'
-  
+  post '/ingredients/eat/:id', to: 'ingredients#destroy'
   get '/recipes/random', to: 'recipes#random'
   post '/ingredients/convert', to: 'ingredients#convert'
   patch '/user_ingredient/:id', to: 'users#edit_pantry'
   post '/users/join_potluck', to: 'users#join_potluck'
   post '/users/leave_potluck', to: 'users#leave_potluck'
   post '/potlucks/bring_food', to: 'potlucks#bring_food'
+  post '/potlucks/eat_ingredient/:id', to: 'potlucks#eat_ingredient'
   post '/potlucks/bring_ingredient', to: 'potlucks#bring_ingredient'
   post '/users/unfriend', to: 'users#unfriend'
   get '/ingredients/frequent', to: 'ingredients#stock_pantry'
+  post '/ingredients/bulk_add', to: 'ingredients#bulk_add'
   resources :trips
   resources :potlucks
   resources :ingredients

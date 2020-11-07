@@ -1,8 +1,12 @@
 class SuppliedIngredientSerializer < ActiveModel::Serializer
-  attributes :id, :potluck_id, :amount, :amount_type, :user_id, :ingredient_name, :ingredient_id, :image_url, :potluck_name, :possible_units
+  attributes :id, :potluck_id, :amount, :amount_type, :user_id, :ingredient_name, :ingredient_id, :image_url, :potluck_name, :possible_units, :supplier
 
   def ingredient_id
     self.object.ingredient.spoon_id
+  end
+
+  def supplier
+    self.object.user.name
   end
 
   def potluck_name
