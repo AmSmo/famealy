@@ -1,5 +1,5 @@
 class PotluckRecipeSerializer < ActiveModel::Serializer
-  attributes :user, :recipe
+  attributes :user, :recipe, :start_time
   def user
     ActiveModelSerializers::SerializableResource.new(self.object.user)
   end

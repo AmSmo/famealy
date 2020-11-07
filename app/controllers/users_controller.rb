@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 
     def create
       
+      byebug
         @user = User.create(user_params)
         if @user.valid?
             token = encode_token({user_id: @user.id})
@@ -191,7 +192,7 @@ class UsersController < ApplicationController
       params.require(:update).permit(:amount, :amount_type)
     end
     def user_params
-      params.permit(:username, :password, :location, :email_address, :name, :profile_pic)
+      params.permit(:username, :password, :location, :email_address, :name, :profile)
     end
 
     def pantry_id
