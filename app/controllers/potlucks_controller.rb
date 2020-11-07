@@ -52,8 +52,24 @@ class PotlucksController < ApplicationController
 
         render json: current_supply
     end
+
+    def change_recipe_time
+    
+        current_recipe = PotluckRecipe.find_by(id: params[:id])
+        if time_params[:time]
+            time_object = Time.parse(time_params[:time])
+        else
+            time_object = nil
+        end
+        current_recipe.update(start_time: time_object)
+        render json: current_recipe
+    end
+
     private
 
+    def time_params
+        params.require(:potluck_recipe).permit(:time)
+    end
     def ingredient_params
         params.require(:ingredients).permit(:amount, :spoon_id, :amount_type, :potId)
     end

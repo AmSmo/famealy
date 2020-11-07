@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   post '/users/unfriend', to: 'users#unfriend'
   get '/ingredients/frequent', to: 'ingredients#stock_pantry'
   post '/ingredients/bulk_add', to: 'ingredients#bulk_add'
+  post '/potluck/change_recipe_time/:id', to: 'potlucks#change_recipe_time'
   resources :trips
   resources :potlucks
   resources :ingredients
