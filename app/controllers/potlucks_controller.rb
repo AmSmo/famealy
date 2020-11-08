@@ -16,6 +16,18 @@ class PotlucksController < ApplicationController
         render json: {my_potlucks: my_potlucks, friends_potlucks:fixed}
     end
 
+
+    def edit_pantry
+      
+      ingredient = SuppliedIngredient.find_by(id: params[:id])
+      ingredient.update!(update_params)
+      
+      
+      
+
+        render json: ingredient
+    end
+
     def eat_ingredient
         
         current_supplied = SuppliedIngredient.find_by(id: params[:id])
@@ -79,5 +91,9 @@ class PotlucksController < ApplicationController
 
     def potluck_params
         params.require(:potluck).permit(:name, :location, :date)
+    end
+
+     def update_params
+      params.require(:update).permit(:amount, :amount_type)
     end
 end
