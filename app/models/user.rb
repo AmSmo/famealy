@@ -13,7 +13,7 @@
 #
 class User < ApplicationRecord
     has_secure_password
-    # has_one_attached :profile
+    has_one_attached :profile
     
     has_many :user_users, dependent: :destroy
     has_many :friends, through: :user_users

@@ -12,7 +12,17 @@
 #  updated_at      :datetime         not null
 #
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :username, :location, :email_address, :recipes, :friends, :potlucks, :ingredients
+  include Rails.application.routes.url_helpers
+  attributes :id, :name, :username, :location, :email_address, :recipes, :friends, :potlucks, :ingredients, :profile
+
+  def profile
+    if self.object&.profile&.attached?
+      return "http://localhost:3001#{rails_blob_url(self.object.profile, only_path: true)}"
+    else
+      return "http://clipart-library.com/img1/925908.png"
+    end
+  end
+
 
   def ingredients
     ActiveModelSerializers::SerializableResource.new(self.object.user_ingredients)

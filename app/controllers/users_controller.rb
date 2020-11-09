@@ -1,10 +1,16 @@
 class UsersController < ApplicationController
-     skip_before_action :authorized, only: [:create, :login, :auth]
+  include Rails.application.routes.url_helpers   
+  skip_before_action :authorized, only: [:create, :login, :auth, :update, :index]
 
+    def index
+      @users = User.all
+      render json: @users
+    end
     def create
       
       
         @user = User.create(user_params)
+        
         if @user.valid?
             token = encode_token({user_id: @user.id})
             render json: { user: @user, jwt: token}, status: :accepted
@@ -27,6 +33,11 @@ class UsersController < ApplicationController
         hashed_uu.delete("password_digest")
         hashed_uu[:friendship] = user_user.id
         
+        if user_user.friend&.profile&.attached?
+          hashed_uu[:profile] = "http://localhost:3001#{rails_blob_url(user_user.friend.profile, only_path: true)}"
+        else
+          hashed_uu[:profile] =  "http://clipart-library.com/img1/925908.png"
+        end
         hashed_uu
     end
     
@@ -161,6 +172,11 @@ class UsersController < ApplicationController
       render json: current_potluck.users
     end
 
+    def update
+      current_user = User.find_by(id: params[:id])
+      current_user.update!(profile: params[:profile])
+    end
+
     def edit_pantry
       
       ingredient = UserIngredient.find_by(id: params[:id])
@@ -178,6 +194,9 @@ class UsersController < ApplicationController
     end
 
     private
+    def photo_params
+      params.require(:photo).permit(:profile)
+    end
 
     def unfriend_params
       params.require(:user).permit(:friend_id)
