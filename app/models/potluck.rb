@@ -10,6 +10,7 @@
 #  updated_at :datetime         not null
 #
 class Potluck < ApplicationRecord
+    has_one_attached :photo
     has_many :user_potlucks, dependent: :destroy
     has_many :users, through: :user_potlucks
     has_many :potluck_recipes, dependent: :destroy
@@ -32,4 +33,6 @@ class Potluck < ApplicationRecord
         end
         ings
     end
+
+    
 end

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   post '/users/join_potluck', to: 'users#join_potluck'
   post '/users/leave_potluck', to: 'users#leave_potluck'
   post '/potlucks/bring_food', to: 'potlucks#bring_food'
+  post '/potlucks/delete_food/:id', to: 'potlucks#delete_food'
   post '/potlucks/eat_ingredient/:id', to: 'potlucks#eat_ingredient'
   post '/potlucks/bring_ingredient', to: 'potlucks#bring_ingredient'
   post '/potlucks/bring_ingredient', to: 'potlucks#bring_ingredient'
@@ -28,7 +29,9 @@ Rails.application.routes.draw do
   post '/ingredients/bulk_add', to: 'ingredients#bulk_add'
   post '/potluck/change_recipe_time/:id', to: 'potlucks#change_recipe_time'
   resources :trips
-  resources :potlucks
+  resources :potlucks do
+    get :photo, on: :member
+  end
   resources :ingredients
   resources :recipes
   resources :users do

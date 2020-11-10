@@ -12,8 +12,11 @@ class PotlucksController < ApplicationController
         if !fixed
             fixed = []
         end
+        test1 = my_potlucks.map {|potluck| PotluckCardSerializer.new(potluck)}
+        test2 = fixed.map {|potluck| PotluckCardSerializer.new(potluck)}
         
-        render json: {my_potlucks: my_potlucks, friends_potlucks:fixed}
+        
+        render json: {my_potlucks: test1, friends_potlucks: test2}
     end
 
 
@@ -46,7 +49,8 @@ class PotlucksController < ApplicationController
     end
 
     def create
-        current_potluck = Potluck.create(potluck_params)
+        byebug
+        current_potluck = Potluck.create!(potluck_params)
         UserPotluck.create(potluck: current_potluck, user: current_user)
         index
     end
@@ -65,6 +69,11 @@ class PotlucksController < ApplicationController
         render json: current_supply
     end
 
+    def delete_food
+        current = PotluckRecipe.find_by(id: params[:id])
+        current.destroy
+        render json: current
+    end
     def change_recipe_time
     
         current_recipe = PotluckRecipe.find_by(id: params[:id])
@@ -77,6 +86,10 @@ class PotlucksController < ApplicationController
         render json: current_recipe
     end
 
+    def update
+        current = Potluck.find_by(id: params[:id])
+        current.update!(photo: params[:photo])
+    end
     private
 
     def time_params
@@ -90,7 +103,7 @@ class PotlucksController < ApplicationController
     end
 
     def potluck_params
-        params.require(:potluck).permit(:name, :location, :date)
+        params.permit(:name, :location, :date, :photo)
     end
 
      def update_params
