@@ -1,6 +1,7 @@
 class IngredientsController < ApplicationController
     skip_before_action :authorized, only: [:stock_pantry]
     allowed_types = ["oz", "cup", "g", "tbsp", "tsp", "lb", "kg"]
+
     def find_ingredient
         results = Api.ingredient_search(params[:ingredient])
        if results[0]["id"] == nil
@@ -33,9 +34,10 @@ class IngredientsController < ApplicationController
 
     def bulk_add
         bulk_params[:ingredients].map do |ingredient|
-            if ingredient["add"]
+            
+            if ingredient["add"] && ingredient["amount"].to_f > 0
                 current_ingredient = Ingredient.find_by(spoon_id: ingredient["spoon_id"])
-                UserIngredient.create(user: current_user, ingredient: current_ingredient, amount: bulk_params[:ingredients][0]["amount"].to_f, amount_type: bulk_params[:ingredients][0]["amount_type"])
+                UserIngredient.create(user: current_user, ingredient: current_ingredient, amount: ingredient["amount"].to_f, amount_type:ingredient["amount_type"])
             end
         end
         ingredients = current_user.user_ingredients
