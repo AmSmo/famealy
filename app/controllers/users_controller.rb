@@ -36,7 +36,7 @@ class UsersController < ApplicationController
         if user_user.friend&.profile&.attached?
           hashed_uu[:profile] = "http://localhost:3001#{rails_blob_url(user_user.friend.profile, only_path: true)}"
         else
-          hashed_uu[:profile] =  "http://clipart-library.com/img1/925908.png"
+          hashed_uu[:profile] =  "https://i.etsystatic.com/17857814/r/il/5439b3/1564754370/il_1588xN.1564754370_i805.jpg"
         end
         hashed_uu
     end

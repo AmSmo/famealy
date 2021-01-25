@@ -19,7 +19,7 @@ class UserSerializer < ActiveModel::Serializer
     if self.object&.profile&.attached?
       return "http://localhost:3001#{rails_blob_url(self.object.profile, only_path: true)}"
     else
-      return "http://clipart-library.com/img1/925908.png"
+      return "https://i.etsystatic.com/17857814/r/il/5439b3/1564754370/il_1588xN.1564754370_i805.jpg"
     end
   end
 
