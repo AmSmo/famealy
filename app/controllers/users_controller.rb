@@ -6,9 +6,8 @@ class UsersController < ApplicationController
       @users = User.all
       render json: @users
     end
-    def create
-      
-      
+
+    def create  
         @user = User.create(user_params)
         
         if @user.valid?
@@ -113,6 +112,8 @@ class UsersController < ApplicationController
       results = results.reject{|friend| current_user.friends.include?(friend)}
       render json: results
     end
+
+
     def pertinent
       
       recipes = current_user.recipes
@@ -126,8 +127,7 @@ class UsersController < ApplicationController
       current_user_ingredient = UserIngredient.find_by(user: current_user, ingredient: ingredient)
       if current_user_ingredient
         
-        if params["pantry"]["amount_type"] == current_user_ingredient.amount_type
-          
+        if params["pantry"]["amount_type"] == current_user_ingredient.amount_type  
           new_amount = params["pantry"]["amount"].to_f + current_user_ingredient.amount
           current_user_ingredient.update(amount: new_amount)
         end
@@ -158,15 +158,14 @@ class UsersController < ApplicationController
 
     def leave_potluck
       current_potluck = Potluck.find_by(id: params[:potluck_id])
-      current_user_potluck = UserPotluck.find_by(user: current_user, potluck: current_potluck )
-        
+      current_user_potluck = UserPotluck.find_by(user: current_user, potluck: current_potluck )   
       current_potluck.potluck_recipes.select{|pr| pr.user === current_user}.map(&:destroy)
       current_user_ingredients = SuppliedIngredient.where(potluck: current_potluck, user: current_user)
       current_user_ingredients.destroy_all
       current_user_potluck.destroy
+      
       if (current_potluck.users.length == 0)
-        current_potluck.destroy
-        
+        current_potluck.destroy 
         render json: {message: "The end"}
       end 
       render json: current_potluck.users
@@ -181,11 +180,7 @@ class UsersController < ApplicationController
       
       ingredient = UserIngredient.find_by(id: params[:id])
       ingredient.update!(update_params)
-      
-      
-      
-
-        render json: ingredient
+      render json: ingredient
     end
 
     def user_info
