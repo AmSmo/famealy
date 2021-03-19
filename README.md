@@ -1,24 +1,11 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a Web app to find recipes and create a family dinner type experience with friends. 
 
-Things you may want to cover:
+From scheduling time in the kitchen to making sure you have the right ingredients.  
 
-* Ruby version
+Built as a CapStone project for a bootcamp project.
 
-* System dependencies
+You can find a video walk through here:
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+https://www.youtube.com/watch?v=D8KS8ddKwOg
